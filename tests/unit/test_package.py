@@ -16,7 +16,7 @@ def test_parse_index(index_html):
 
 def test_render_index(index_html):
     expected_html, packages = index_html
-    assert Index(packages).to_html() == expected_html
+    assert Index(packages).to_html() == expected_html.decode('utf-8')
 
 
 def test_add_package():

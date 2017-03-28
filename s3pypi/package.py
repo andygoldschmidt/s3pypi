@@ -4,6 +4,7 @@ import re
 from collections import defaultdict
 from subprocess import check_output, CalledProcessError
 
+import six
 from jinja2 import Environment, PackageLoader
 
 from s3pypi import __prog__
@@ -38,7 +39,8 @@ class Package(object):
 
     @staticmethod
     def _find_package_name(text):
-        match = re.search('^(copying files to|making hard links in) (.+)\.\.\.', text, flags=re.MULTILINE)
+        match = re.search('^(copying files to|making hard links in) (.+)\.\.\.',
+                          text.decode('utf-8'), flags=re.MULTILINE)
 
         if not match:
             raise RuntimeError('Package name not found in:\n' + text)
@@ -79,10 +81,10 @@ class Index(object):
     def parse(html):
         filenames = defaultdict(set)
 
-        for match in re.findall('<a href="((.+?-\d+\.\d+\.\d+).+)">', html):
+        for match in re.findall('<a href="((.+?-\d+\.\d+\.\d+).+)">', html.decode('utf-8')):
             filenames[match[1]].add(match[0])
-
-        return Index(Package(name, files) for name, files in filenames.iteritems())
+        iterator = filenames.items() if six.PY3 else filenames.iteritems()
+        return Index(Package(name, files) for name, files in iterator)
 
     def to_html(self):
         return self.template.render({'packages': self.packages})

@@ -25,7 +25,8 @@ def create_and_upload_package(args):
 
 
 def main():
-    p = argparse.ArgumentParser(prog=__prog__, version=__version__)
+    p = argparse.ArgumentParser()
+    p.add_argument('--version', action='version', version='{} {}'.format(__prog__, __version__))
     p.add_argument('--bucket', required=True, help='S3 bucket')
     p.add_argument('--secret', help='S3 secret')
     p.add_argument('--region', help='S3 region')

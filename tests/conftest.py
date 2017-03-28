@@ -15,7 +15,7 @@ def secret():
 @pytest.fixture(scope='function', params=['helloworld-0.1', 's3pypi-0.1.3'])
 def sdist_output(request):
     with open(os.path.join('tests', 'data', 'sdist_output', request.param)) as f:
-        yield f.read(), request.param
+        yield f.read().encode('utf-8'), request.param
 
 
 @pytest.fixture(scope='function', params=[
@@ -25,4 +25,4 @@ def sdist_output(request):
 def index_html(request):
     name, packages = request.param
     with open(os.path.join('tests', 'data', 'index', name + '.html')) as f:
-        yield f.read().strip(), packages
+        yield f.read().strip().encode('utf-8'), packages
